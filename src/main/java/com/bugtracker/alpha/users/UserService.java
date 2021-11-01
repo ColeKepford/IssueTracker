@@ -15,14 +15,14 @@ public class UserService {
   private final LoggingController logs;
 
   @Autowired
-    public UserService(UserRepository userRepository, LoggingController logs) {
-        this.userRepository = userRepository;
-        this.logs = logs;
-    }
+  public UserService(UserRepository userRepository, LoggingController logs) {
+    this.userRepository = userRepository;
+    this.logs = logs;
+  }
 
-    public List<User> getAllUsers() {
-      logs.userRetrievedSuccessfully("Retrieved all users");
-      return userRepository.findAll();
+  public List<User> getAllUsers() {
+    logs.userRetrievedSuccessfully("Retrieved all users");
+    return userRepository.findAll();
   }
 
   public User getUserById(int id) {
@@ -31,7 +31,7 @@ public class UserService {
       logs.userDoesntExist("User with id: "+id+" doesnt exsist");
       return null;
     }
-    else{
+    else {
       logs.userRetrievedSuccessfully("User with id: "+id+" was retrieved");
       return userRepository.getById(id);
     }
@@ -47,7 +47,7 @@ public class UserService {
     } 
     else {
       logs.userDoesntExist("User with email: " + email + " does not exsist");
-      return null;
+      return new ArrayList<>();
     }
   }
 
