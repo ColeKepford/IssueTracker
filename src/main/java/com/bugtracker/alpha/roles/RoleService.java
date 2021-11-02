@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.bugtracker.alpha.companies.Company;
 import com.bugtracker.alpha.logging.LoggingController;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,8 @@ public class RoleService {
     this.roleRepository = roleRepository;
     this.logs = logs;
   }
-
+  
+  
   public List<Role> getAllRoles() {
     //todo logging
     return roleRepository.findAll();
@@ -37,8 +39,8 @@ public class RoleService {
     }
   }
 
-  public List<Role> getRolesByCompany(int id) {
-    Optional<List<Role>> rolesOptional = roleRepository.findByCompanyId(id);
+  public List<Role> getRolesByCompany(Company company) {
+    Optional<List<Role>> rolesOptional = roleRepository.findByCompany(company.getCompany_id());
     if(rolesOptional.isPresent()) {
       //todo logging
       List<Role> roles = new ArrayList<>();
@@ -51,6 +53,7 @@ public class RoleService {
     }
   }
 
+  
   public List<Role> getRolesByName(String name) {
     Optional<List<Role>> rolesOptional = roleRepository.findByName(name);
     if(rolesOptional.isPresent()) {
@@ -65,7 +68,7 @@ public class RoleService {
     }
   }
 
-  public void addNewRoles(Role role) {
+  public void addNewRole(Role role) {
     Optional<Role> roleOptional = roleRepository.findById(role.getRole_id());
     if(roleOptional.isPresent()) {
       //todo logging
@@ -76,17 +79,18 @@ public class RoleService {
     }
   }
 
+  
   public void updateRole(Role role) {
     Optional<Role> roleOptional = roleRepository.findById(role.getRole_id());
     if(roleOptional.isPresent()) {
-      roleRepository.updateRole(role.getCompany_id(), role.getName());
+      roleRepository.updateRole(role.getName(), role.getRole_id());
       //todo logging
     }
     else {
       //todo logging
     }
   }
-
+  
   public void deleteRole(Role role) {
     Optional<Role> roleOptional = roleRepository.findById(role.getRole_id());
     if(roleOptional.isPresent()) {

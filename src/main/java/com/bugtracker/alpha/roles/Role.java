@@ -1,27 +1,27 @@
 package com.bugtracker.alpha.roles;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+
+import com.bugtracker.alpha.companies.Company;
 
 @Entity
-@Table(name="company_roles")
+@Table(name="role")
 public class Role {
   
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private int role_id;
-  private int company_id;
+  @JoinColumn(name = "company", referencedColumnName = "company_id")
+  @ManyToOne(optional = false, fetch = FetchType.EAGER)
+  private Company company;
   private String name;
 
   public Role() {
 
   }
 
-  public Role(int company_id, String name) {
-    this.company_id = company_id;
+  public Role(Company company, String name) {
+    this.company = company;
     this.name = name;
   }
 
@@ -33,12 +33,12 @@ public class Role {
     this.role_id = role_id;
   }
 
-  public int getCompany_id() {
-    return this.company_id;
+  public Company getCompany() {
+    return this.company;
   }
 
-  public void setCompany_id(int company_id) {
-    this.company_id = company_id;
+  public void setCompany_id(Company company) {
+    this.company = company;
   }
 
   public String getName() {

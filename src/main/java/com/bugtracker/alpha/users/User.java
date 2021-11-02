@@ -5,8 +5,9 @@ import javax.persistence.*;
 import org.springframework.format.annotation.DateTimeFormat;
 import com.bugtracker.alpha.companies.*;
 import com.bugtracker.alpha.roles.*;
+
 @Entity
-@Table(name="users")
+@Table(name="user")
 public class User {
 
   @Id
@@ -23,7 +24,7 @@ public class User {
   private String postal_code;
   private String phone_num;
   @DateTimeFormat(pattern = "yyyy-MM-dd")
-  private LocalDate created_time;
+  private String created_time;
   @JoinColumn(name = "role", referencedColumnName = "role_id")
   @ManyToOne(optional = false, fetch = FetchType.EAGER)
   private Role role;
@@ -32,7 +33,7 @@ public class User {
 
   }
 
-  public User(String email, String password, String first_name, String last_name, Company company, String address, String postal_code, String phone_num, LocalDate created_time, Role role) {
+  public User(String email, String password, String first_name, String last_name, Company company, String address, String postal_code, String phone_num, String created_time, Role role) {
     this.email = email;
     this.password = password;
     this.first_name = first_name;
@@ -117,11 +118,11 @@ public class User {
     this.phone_num = phone_num;
   }
 
-  public LocalDate getCreated_time() {
+  public String getCreated_time() {
     return this.created_time;
   }
 
-  public void setCreated_time(LocalDate created_time) {
+  public void setCreated_time(String created_time) {
     this.created_time = created_time;
   }
 

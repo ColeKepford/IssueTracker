@@ -28,7 +28,7 @@ public class UserService {
   public User getUserById(int id) {
     boolean exists = userRepository.existsById(id);
     if(!exists) {
-      logs.userDoesntExist("User with id: "+id+" doesnt exsist");
+      logs.userDoesntExist("User with id: "+id+" doesnt exist");
       return null;
     }
     else {
@@ -46,7 +46,21 @@ public class UserService {
       return user;
     } 
     else {
-      logs.userDoesntExist("User with email: " + email + " does not exsist");
+      logs.userDoesntExist("User with email: " + email + " does not exist");
+      return new ArrayList<>();
+    }
+  }
+
+  public List<User> getUsersByLastName(String name) {
+    Optional<List<User>> usersOptional = userRepository.findUsersByLastName(name);
+    if(usersOptional.isPresent()) { 
+      logs.userRetrievedSuccessfully("Users with last name: " + name + " were retrieved");
+      List<User> users = new ArrayList<>();
+      users.addAll(usersOptional.get());
+      return users;
+    } 
+    else {
+      logs.userDoesntExist("User with last name: " + name + " do not exist");
       return new ArrayList<>();
     }
   }
@@ -54,7 +68,7 @@ public class UserService {
   public void addNewUser(User user) {
     Optional<User> userOptional = userRepository.findUserByEmail(user.getEmail());
     if(userOptional.isPresent()) {
-        logs.userDoesExist("User with email: " + user.getEmail() + " already exsists");
+        logs.userDoesExist("User with email: " + user.getEmail() + " already exists");
     }
     userRepository.save(user);
     logs.userAddedSuccessfully("User: " + user.getEmail() + " was successfully added");
@@ -67,7 +81,7 @@ public class UserService {
         return userOptional.get();
     }
     else {
-        logs.userDoesntExist("User with email: " + email + " does not exsist");
+        logs.userDoesntExist("User with email: " + email + " does not exist");
         return null;
     }
   }
@@ -75,7 +89,7 @@ public class UserService {
   public void updateuser(User user) {
     Optional<User> userOptional = userRepository.findById(user.getUser_id());
     if(userOptional.isPresent()) {
-        userRepository.updateUser(user.getEmail(), user.getPassword(), user.getFirst_name(), user.getLast_name(), user.getCompany(), user.getAddress(), user.getPostal_code(), user.getPhone_num(), user.getCreated_time(), user.getRole());
+        userRepository.updateUser(user.getEmail(), user.getPassword(), user.getFirst_name(), user.getLast_name(), user.getCompany(), user.getAddress(), user.getPostal_code(), user.getPhone_num(), user.getCreated_time(), user.getRole(), user.getUser_id());
      
         logs.updateSuccessful("User: " + user.getEmail() + " was successfully updated");
     } else {
