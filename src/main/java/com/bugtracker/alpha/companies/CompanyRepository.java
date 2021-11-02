@@ -5,10 +5,11 @@ import java.util.Optional;
 
 import javax.transaction.Transactional;
 
-import org.springframework.data.jdbc.repository.query.Modifying;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+
 
 @Repository
 public interface CompanyRepository extends JpaRepository<Company, Integer> {
@@ -18,8 +19,8 @@ public interface CompanyRepository extends JpaRepository<Company, Integer> {
 
   @Transactional
   @Modifying
-  @Query("UPDATE Company SET company_name= ?1")
-  void updateCompany(String name);
+  @Query("UPDATE Company SET company_name= ?1 WHERE company_id = ?2")
+  void updateCompany(String name, int id);
 
   @Transactional
   @Modifying
