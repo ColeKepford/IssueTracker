@@ -1,4 +1,4 @@
-package com.bugtracker.alpha.users;
+package com.bugtracker.alpha.repositories;
 
 import java.util.List;
 import java.util.Optional;
@@ -10,8 +10,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import com.bugtracker.alpha.companies.*;
-import com.bugtracker.alpha.roles.*;
+import com.bugtracker.alpha.entities.*;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
@@ -28,8 +27,8 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     @Transactional
     @Modifying
-    @Query("UPDATE User SET email = ?1, password = ?2, first_name = ?3, last_name = ?4, company = ?5, address = ?6, postal_code = ?7, phone_num = ?8, created_time = ?9, role = ?10 WHERE user_id = ?11")
-    void updateUser(String email, String password, String first_name, String last_name, Company company, String address, String postal_code, String phone_num, String created_time, Role role, int id);
+    @Query("UPDATE User SET email = ?1, password = ?2, first_name = ?3, last_name = ?4, company = ?5, address = ?6, postal_code = ?7, province=?8, country=?9, phone_num = ?10, created_time = ?11, role = ?12 WHERE user_id = ?13")
+    void updateUser(String email, String password, String first_name, String last_name, Company company, String address, String postal_code, String province, String country, String phone_num, String created_time, Role role, int id);
 
     @Transactional
     @Modifying

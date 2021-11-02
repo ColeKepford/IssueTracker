@@ -1,10 +1,7 @@
-package com.bugtracker.alpha.users;
-import java.time.LocalDate;
+package com.bugtracker.alpha.entities;
 
 import javax.persistence.*;
 import org.springframework.format.annotation.DateTimeFormat;
-import com.bugtracker.alpha.companies.*;
-import com.bugtracker.alpha.roles.*;
 
 @Entity
 @Table(name="user")
@@ -22,6 +19,8 @@ public class User {
   private Company company;
   private String address;
   private String postal_code;
+  private String province;
+  private String country;
   private String phone_num;
   @DateTimeFormat(pattern = "yyyy-MM-dd")
   private String created_time;
@@ -33,7 +32,7 @@ public class User {
 
   }
 
-  public User(String email, String password, String first_name, String last_name, Company company, String address, String postal_code, String phone_num, String created_time, Role role) {
+  public User(String email, String password, String first_name, String last_name, Company company, String address, String postal_code, String province, String country, String phone_num, String created_time, Role role) {
     this.email = email;
     this.password = password;
     this.first_name = first_name;
@@ -41,6 +40,8 @@ public class User {
     this.company = company;
     this.address = address;
     this.postal_code = postal_code;
+    this.province = province;
+    this.country = country;
     this.phone_num = phone_num;
     this.created_time = created_time;
     this.role = role;
@@ -108,6 +109,22 @@ public class User {
 
   public void setPostal_code(String postal_code) {
     this.postal_code = postal_code;
+  }
+
+  public String getProvince() {
+    return this.province;
+  }
+
+  public void setProvince(String province) {
+    this.province = province;
+  }
+
+  public String getCountry() {
+    return this.country;
+  }
+
+  public void setCountry(String country) {
+    this.country = country;
   }
 
   public String getPhone_num() {
