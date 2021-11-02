@@ -25,6 +25,9 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Query("Select u FROM User u WHERE u.last_name LIKE ?1%")
     Optional<List<User>> findUsersByLastName(String last_name);
 
+    @Query(value = "SELECT Issue FROM issue_assigned_users iu WHERE iu.user=?1", nativeQuery = true)
+    Optional<List<Issue>> getAllIssues(int id);
+
     @Transactional
     @Modifying
     @Query("UPDATE User SET email = ?1, password = ?2, first_name = ?3, last_name = ?4, company = ?5, address = ?6, postal_code = ?7, province=?8, country=?9, phone_num = ?10, created_time = ?11, role = ?12 WHERE user_id = ?13")

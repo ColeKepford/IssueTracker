@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.bugtracker.alpha.controllers.LoggingController;
+import com.bugtracker.alpha.entities.Issue;
 import com.bugtracker.alpha.entities.User;
 import com.bugtracker.alpha.repositories.UserRepository;
 
@@ -25,6 +26,16 @@ public class UserService {
   public List<User> getAllUsers() {
     logs.userRetrievedSuccessfully("Retrieved all users");
     return userRepository.findAll();
+  }
+
+  public List<Issue> getAllIssues(int id) {
+    boolean exists = userRepository.existsById(id);
+    if(!exists) {
+      return new ArrayList<>();
+    }
+    else {
+      return userRepository.getAllIssues(id).get();
+    }
   }
 
   public User getUserById(int id) {
