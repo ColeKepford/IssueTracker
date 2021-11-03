@@ -1,17 +1,31 @@
 package com.bugtracker.alpha.entities;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.springframework.format.annotation.DateTimeFormat;
+
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+@Data
+@EqualsAndHashCode(exclude = "assignedUsers")
+
 
 @Entity
 @Table(name="issue")
@@ -33,11 +47,17 @@ public class Issue {
   @DateTimeFormat(pattern = "YYYY-MM-DD hh:mm:ss")
   private LocalDateTime date_resolved;
 
+  @ManyToMany(cascade = CascadeType.ALL)
+  @JoinTable(name = "issue_assigned_users",
+      joinColumns = @JoinColumn(name = "issue", referencedColumnName = "issue_id"),
+      inverseJoinColumns = @JoinColumn(name = "user", referencedColumnName = "user_id"))
+  private Set<User> assignedUsers;
+
 
   public Issue() {
   }
 
-  public Issue(String title, String description, String severity, Company company, String type, String state, LocalDateTime date_created) {
+  public Issue(String title, String description, String severity, Company company, String type, String state, LocalDateTime date_created, User... assignedUsers) {
     this.title = title;
     this.description = description;
     this.severity = severity;
@@ -45,6 +65,8 @@ public class Issue {
     this.type = type;
     this.state = state;
     this.date_created = date_created;
+    this.assignedUsers = Stream.of(assignedUsers).collect(Collectors.toSet());
+    this.assignedUsers.forEach(x -> x.getIssues().add(this));
   }
 
 

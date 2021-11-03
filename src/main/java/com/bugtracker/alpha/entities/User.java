@@ -1,7 +1,14 @@
 package com.bugtracker.alpha.entities;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.persistence.*;
 import org.springframework.format.annotation.DateTimeFormat;
+
+import lombok.Data;
+
+@Data
 
 @Entity
 @Table(name="user")
@@ -27,6 +34,8 @@ public class User {
   @JoinColumn(name = "role", referencedColumnName = "role_id")
   @ManyToOne(optional = false, fetch = FetchType.EAGER)
   private Role role;
+  @ManyToMany(mappedBy = "assignedUsers")
+  private Set<Issue> issues = new HashSet<>();
 
   public User() {
 
@@ -149,6 +158,14 @@ public class User {
 
   public void setRole(Role role) {
     this.role = role;
+  }
+
+  public Set<Issue> getIssues() {
+    return this.issues;
+  }
+
+  public void setIssues(Set<Issue> issues) {
+    this.issues = issues;
   }
 
   @Override

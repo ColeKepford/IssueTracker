@@ -41,21 +41,6 @@ public class RoleService {
     }
   }
 
-  public List<Role> getRolesByCompany(Company company) {
-    Optional<List<Role>> rolesOptional = roleRepository.findByCompany(company.getCompany_id());
-    if(rolesOptional.isPresent()) {
-      //todo logging
-      List<Role> roles = new ArrayList<>();
-      roles.addAll(rolesOptional.get());
-      return roles;
-    }
-    else {
-      //todo logging
-      return new ArrayList<>();
-    }
-  }
-
-  
   public List<Role> getRolesByName(String name) {
     Optional<List<Role>> rolesOptional = roleRepository.findByName(name);
     if(rolesOptional.isPresent()) {
@@ -70,7 +55,7 @@ public class RoleService {
     }
   }
 
-  public void addNewRole(Role role) {
+  public void addRole(Role role) {
     Optional<Role> roleOptional = roleRepository.findById(role.getRole_id());
     if(roleOptional.isPresent()) {
       //todo logging

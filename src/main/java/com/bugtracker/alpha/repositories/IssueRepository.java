@@ -21,14 +21,32 @@ public interface IssueRepository extends JpaRepository<Issue, Integer> {
   @Query("SELECT c FROM Issue c WHERE c.company=?1")
   Optional<List<Issue>> findByCompany(int id);
 
-  @Query("Select c FROM Issue c WHERE c.name LIKE ?1 AND c.user=?2")
-  Optional<List<Issue>> findByTitle(String title, int id);
+  @Query("SELECT i FROM Issue i WHERE i.title LIKE ?1")
+  Optional<List<Issue>> findByTitle(String title);
 
-  @Query("SELECT c FROM Issue c WHERE c.severity LIKE ?1 AND c.user=?2")
-  Optional<List<Issue>> findBySeverity(String severity, int id);
+  @Query(value="SELECT Issue FROM Issue i INNER JOIN issue_assigned_users iu USING (i.issue_id) WHERE i.title LIKE ?1 AND iu.user=?2", nativeQuery = true)
+  Optional<List<Issue>> findByTitleForUser(String title, int id);
+
+  @Query("SELECT i FROM Issue i WHERE i.severity LIKE ?1")
+  Optional<List<Issue>> findBySeverity(String severity);
+
+  @Query(value="SELECT Issue FROM Issue i INNER JOIN issue_assigned_users iu USING (i.issue_id) WHERE i.severity LIKE ?1 AND iu.user=?2", nativeQuery = true)
+  Optional<List<Issue>> findBySeverityForUser(String severity, int id);
+
+  @Query(value="SELECT Issue FROM Issue i INNER JOIN issue_assigned_users iu USING (i.issue_id) WHERE i.state LIKE ?1 AND iu.user=?2", nativeQuery = true)
+  Optional<List<Issue>> findByStateForUser(String state, int id);
+
+  @Query("SELECT i FROM Issue i WHERE i.state LIKE ?1")
+  Optional<List<Issue>> findByState(String state);
+
 
   @Query(value="SELECT User FROM issue_assigned_users iu WHERE iu.issue=?1", nativeQuery = true)
   Optional<List<User>> findAllAssignedUsers(int id);
+
+  @Transactional
+  @Modifying
+  @Query(value="INSERT INTO issue_assigned_users(?1, ?2)", nativeQuery = true)
+  void assignUserToIssue(int issue_id, int user_id);
 
   @Transactional
   @Modifying

@@ -15,10 +15,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface RoleRepository extends JpaRepository<Role, Integer> {
   
-  @Query("Select c FROM Role c WHERE c.company=?1")
-  Optional<List<Role>> findByCompany(int id);
-  
-  
   @Query("Select c FROM Role c WHERE c.name LIKE ?1")
   Optional<List<Role>> findByName(String name);
   
@@ -30,6 +26,6 @@ public interface RoleRepository extends JpaRepository<Role, Integer> {
   
   @Transactional
   @Modifying
-  @Query("UPDATE Role SET company=?1, name=?2 WHERE role_id=?3")
+  @Query("name=?1 WHERE role_id=?2")
   void updateRole(String name, int id);
 }

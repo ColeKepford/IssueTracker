@@ -9,17 +9,13 @@ public class Role {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private int role_id;
-  @JoinColumn(name = "company", referencedColumnName = "company_id")
-  @ManyToOne(optional = false, fetch = FetchType.EAGER)
-  private Company company;
   private String name;
 
   public Role() {
 
   }
 
-  public Role(Company company, String name) {
-    this.company = company;
+  public Role(String name) {
     this.name = name;
   }
 
@@ -29,14 +25,6 @@ public class Role {
 
   public void setRole_id(int role_id) {
     this.role_id = role_id;
-  }
-
-  public Company getCompany() {
-    return this.company;
-  }
-
-  public void setCompany_id(Company company) {
-    this.company = company;
   }
 
   public String getName() {

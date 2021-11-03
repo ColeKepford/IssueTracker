@@ -54,8 +54,8 @@ public class IssueService {
     }
   }
 
-  public List<Issue> findByTitle(String title, int id) {
-    Optional<List<Issue>> optionalIssues = issueRepository.findByTitle(title, id);
+  public List<Issue> findByTitle(String title) {
+    Optional<List<Issue>> optionalIssues = issueRepository.findByTitle(title);
     if(!optionalIssues.isPresent()) {
       return new ArrayList<>();
     }
@@ -64,8 +64,48 @@ public class IssueService {
     }
   }
 
-  public List<Issue> findBySeverity(String severity, int id) {
-    Optional<List<Issue>> optionalIssues = issueRepository.findBySeverity(severity, id);
+  public List<Issue> findByTitleForUser(String title, int id) {
+    Optional<List<Issue>> optionalIssues = issueRepository.findByTitleForUser(title, id);
+    if(!optionalIssues.isPresent()) {
+      return new ArrayList<>();
+    }
+    else {
+      return optionalIssues.get();
+    }
+  }
+
+  public List<Issue> findBySeverity(String severity) {
+    Optional<List<Issue>> optionalIssues = issueRepository.findBySeverity(severity);
+    if(!optionalIssues.isPresent()) {
+      return new ArrayList<>();
+    }
+    else {
+      return optionalIssues.get();
+    }
+  }
+
+  public List<Issue> findBySeverityForUser(String severity, int id) {
+    Optional<List<Issue>> optionalIssues = issueRepository.findBySeverityForUser(severity, id);
+    if(!optionalIssues.isPresent()) {
+      return new ArrayList<>();
+    }
+    else {
+      return optionalIssues.get();
+    }
+  }
+
+  public List<Issue> findByState (String state) {
+    Optional<List<Issue>> optionalIssues = issueRepository.findByState(state);
+    if(!optionalIssues.isPresent()) {
+      return new ArrayList<>();
+    }
+    else {
+      return optionalIssues.get();
+    }
+  }
+
+  public List<Issue> findByStateForUser(String state, int id) {
+    Optional<List<Issue>> optionalIssues = issueRepository.findByStateForUser(state, id);
     if(!optionalIssues.isPresent()) {
       return new ArrayList<>();
     }
@@ -94,8 +134,12 @@ public class IssueService {
     }
   }
 
+  public void assignUserToIssue(int issue_id, int user_id) {
+    issueRepository.assignUserToIssue(issue_id, user_id);
+  }
+
   public void deleteIssue(Issue issue) {
-    Optional<Issue> issueOptional = issueRepository.findById(issue.getIssue_id();
+    Optional<Issue> issueOptional = issueRepository.findById(issue.getIssue_id());
     if(issueOptional.isPresent()) {
       issueRepository.delete(issue);
     }

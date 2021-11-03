@@ -29,12 +29,12 @@ public class UserService {
   }
 
   public List<Issue> getAllIssues(int id) {
-    boolean exists = userRepository.existsById(id);
-    if(!exists) {
+    Optional<List<Issue>> optionalIssues = userRepository.getAllIssues(id);
+    if(!optionalIssues.isPresent()) {
       return new ArrayList<>();
     }
     else {
-      return userRepository.getAllIssues(id).get();
+      return optionalIssues.get();
     }
   }
 
