@@ -1,67 +1,76 @@
 package com.bugtracker.alpha.entities;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 import javax.persistence.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import lombok.Data;
-
-@Data
-
 @Entity
-@Table(name="user")
+@Table(name = "user")
 public class User {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private int user_id;
+  @Column(name="user_id")
+  private long userId;
   private String email;
   private String password;
-  private String first_name;
-  private String last_name;
+  @Column(name="first_name")
+  private String firstName;
+  @Column(name="last_name")
+  private String lastName;
   @JoinColumn(name = "company", referencedColumnName = "company_id")
   @ManyToOne(optional = false, fetch = FetchType.EAGER)
   private Company company;
   private String address;
-  private String postal_code;
+  @Column(name="postal_code")
+  private String postalCode;
   private String province;
   private String country;
-  private String phone_num;
+  @Column(name="phone_num")
+  private String phoneNum;
   @DateTimeFormat(pattern = "yyyy-MM-dd")
-  private String created_time;
+  @Column(name="created_time")
+  private String createdTime;
   @JoinColumn(name = "role", referencedColumnName = "role_id")
   @ManyToOne(optional = false, fetch = FetchType.EAGER)
   private Role role;
-  @ManyToMany(mappedBy = "assignedUsers")
+  @ManyToMany(fetch = FetchType.LAZY,
+    cascade = {
+        CascadeType.PERSIST,
+        CascadeType.MERGE
+    },
+    mappedBy = "assignedUsers")
   private Set<Issue> issues = new HashSet<>();
 
   public User() {
 
   }
 
-  public User(String email, String password, String first_name, String last_name, Company company, String address, String postal_code, String province, String country, String phone_num, String created_time, Role role) {
+  public User(String email, String password, String firstName, String lastName, Company company, String address,
+      String postalCode, String province, String country, String phoneNum, String createdTime, Role role) {
     this.email = email;
     this.password = password;
-    this.first_name = first_name;
-    this.last_name = last_name;
+    this.firstName = firstName;
+    this.lastName = lastName;
     this.company = company;
     this.address = address;
-    this.postal_code = postal_code;
+    this.postalCode = postalCode;
     this.province = province;
     this.country = country;
-    this.phone_num = phone_num;
-    this.created_time = created_time;
+    this.phoneNum = phoneNum;
+    this.createdTime = createdTime;
     this.role = role;
-  } 
-
-  public int getUser_id() {
-    return this.user_id;
   }
 
-  public void setUser_id(int user_id) {
-    this.user_id = user_id;
+  public long getUserId() {
+    return this.userId;
+  }
+
+  public void setUserId(int userId) {
+    this.userId = userId;
   }
 
   public String getEmail() {
@@ -80,20 +89,20 @@ public class User {
     this.password = password;
   }
 
-  public String getFirst_name() {
-    return this.first_name;
+  public String getFirstName() {
+    return this.firstName;
   }
 
-  public void setFirst_name(String first_name) {
-    this.first_name = first_name;
+  public void setFirstName(String firstName) {
+    this.firstName = firstName;
   }
 
-  public String getLast_name() {
-    return this.last_name;
+  public String getLastName() {
+    return this.lastName;
   }
 
-  public void setLast_name(String last_name) {
-    this.last_name = last_name;
+  public void setLastName(String lastName) {
+    this.lastName = lastName;
   }
 
   public Company getCompany() {
@@ -112,12 +121,12 @@ public class User {
     this.address = address;
   }
 
-  public String getPostal_code() {
-    return this.postal_code;
+  public String getPostalCode() {
+    return this.postalCode;
   }
 
-  public void setPostal_code(String postal_code) {
-    this.postal_code = postal_code;
+  public void setPostalCode(String postalCode) {
+    this.postalCode = postalCode;
   }
 
   public String getProvince() {
@@ -136,20 +145,20 @@ public class User {
     this.country = country;
   }
 
-  public String getPhone_num() {
-    return this.phone_num;
+  public String getPhoneNum() {
+    return this.phoneNum;
   }
 
-  public void setPhone_num(String phone_num) {
-    this.phone_num = phone_num;
+  public void setPhoneNum(String phoneNum) {
+    this.phoneNum = phoneNum;
   }
 
-  public String getCreated_time() {
-    return this.created_time;
+  public String getCreatedTime() {
+    return this.createdTime;
   }
 
-  public void setCreated_time(String created_time) {
-    this.created_time = created_time;
+  public void setCreatedTime(String createdTime) {
+    this.createdTime = createdTime;
   }
 
   public Role getRole() {
@@ -168,21 +177,55 @@ public class User {
     this.issues = issues;
   }
 
+  public void assignIssue(Issue issue) {
+    if(!issues.contains(issue)) {
+      issues.add(issue);
+      issue.assignUser(this);
+    }
+  }
+
+  public void removeIssue(Issue issue) {
+    if(issues.contains(issue)) {
+      issues.remove(issue);
+      issue.removeUser(this);
+    }
+  }
+
   @Override
   public String toString() {
     return "{" +
-      " user_id='" + getUser_id() + "'" +
+      " userId='" + getUserId() + "'" +
       ", email='" + getEmail() + "'" +
       ", password='" + getPassword() + "'" +
-      ", first_name='" + getFirst_name() + "'" +
-      ", last_name='" + getLast_name() + "'" +
+      ", firstName='" + getFirstName() + "'" +
+      ", lastName='" + getLastName() + "'" +
       ", company='" + getCompany() + "'" +
       ", address='" + getAddress() + "'" +
-      ", postal_code='" + getPostal_code() + "'" +
-      ", phone_num='" + getPhone_num() + "'" +
-      ", created_time='" + getCreated_time() + "'" +
+      ", postalCode='" + getPostalCode() + "'" +
+      ", province='" + getProvince() + "'" +
+      ", country='" + getCountry() + "'" +
+      ", phoneNum='" + getPhoneNum() + "'" +
+      ", createdTime='" + getCreatedTime() + "'" +
       ", role='" + getRole() + "'" +
+      ", issues='" + getIssues() + "'" +
       "}";
   }
+
+  @Override
+    public boolean equals(Object o) {
+        if (o == this)
+            return true;
+        if (!(o instanceof User)) {
+            return false;
+        }
+        User user = (User) o;
+        return userId == user.userId && Objects.equals(email, user.email) && Objects.equals(password, user.password) && Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName) && Objects.equals(company, user.company) && Objects.equals(address, user.address) && Objects.equals(postalCode, user.postalCode) && Objects.equals(province, user.province) && Objects.equals(country, user.country) && Objects.equals(phoneNum, user.phoneNum) && Objects.equals(createdTime, user.createdTime) && Objects.equals(role, user.role) && Objects.equals(issues, user.issues);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(userId, email, password, firstName, lastName, company, address, postalCode, province, country, phoneNum, createdTime, role);
+  }
+  
 
 }

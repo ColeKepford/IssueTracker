@@ -32,12 +32,12 @@ public class IssueController {
   }
 
   @GetMapping("/getIssue/{id}")
-  public Issue getIssue(@PathVariable("id")Integer id) {
+  public Issue getIssue(@PathVariable("id")long id) {
     return issueService.getIssue(id);
   }
 
   @GetMapping("/getByCompany/{id}")
-  public List<Issue> getIssuesByCompany(@PathVariable("id")Integer id) {
+  public List<Issue> getIssuesByCompany(@PathVariable("id")long id) {
     return issueService.findByCompany(id);
   }
 
@@ -47,7 +47,7 @@ public class IssueController {
   }
 
   @GetMapping("/findByTitleUser/{title}&{id}")
-  public List<Issue> findByTitleForUser(@PathVariable("title")String title, @PathVariable("id")Integer id) {
+  public List<Issue> findByTitleForUser(@PathVariable("title")String title, @PathVariable("id")long id) {
     return issueService.findByTitleForUser(title, id);
   }
 
@@ -57,7 +57,7 @@ public class IssueController {
   }
 
   @GetMapping("/findBySeverity/{severity}&{id}")
-  public List<Issue> findBySeverity(@PathVariable("severity")String severity, @PathVariable("id")Integer id) {
+  public List<Issue> findBySeverity(@PathVariable("severity")String severity, @PathVariable("id")long id) {
     return issueService.findBySeverityForUser(severity, id);
   }
 
@@ -67,13 +67,18 @@ public class IssueController {
   }
 
   @GetMapping("/findByState/{state}&{id}")
-  public List<Issue> findByState(@PathVariable("state")String state, @PathVariable("id")Integer id) {
+  public List<Issue> findByState(@PathVariable("state")String state, @PathVariable("id") long id) {
     return issueService.findByStateForUser(state, id);
   }
 
   @PostMapping(path="/newIssue", consumes="application/json", produces="application/json")
   public void addIssue(@RequestBody Issue issue) {
     issueService.addNewIssue(issue);
+  }
+
+  @PostMapping(path="/assignIssue/{issue_id}&{user_id}")
+  public void assignIssue(@PathVariable("issue_id")long issue_id, @PathVariable("user_id")long user_id) {
+    issueService.assignUserToIssue(issue_id, user_id);
   }
 
   @PutMapping(path="/deleteIssue")

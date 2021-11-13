@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Optional;
 
 import com.bugtracker.alpha.controllers.LoggingController;
-import com.bugtracker.alpha.entities.Company;
 import com.bugtracker.alpha.entities.Role;
 import com.bugtracker.alpha.repositories.RoleRepository;
 
@@ -26,19 +25,20 @@ public class RoleService {
   
   public List<Role> getAllRoles() {
     //todo logging
-    return roleRepository.findAll();
+    Iterable<Role> iterable = roleRepository.findAll();
+    ArrayList<Role> roles = new ArrayList<>();
+    iterable.forEach(roles::add);
+    return roles;
   }
 
-  public Role getRoleById(int id) {
-    boolean exists = roleRepository.existsById(id);
-    if(!exists) {
-      //todo logging
+  public Role findRoleById(long id) {
+    Optional<Role> optional = roleRepository.findById(id);
+    if(!optional.isPresent()) {
       return null;
     }
     else {
-      //todo logging
-      return roleRepository.getById(id);
-    }
+      return optional.get();
+    } 
   }
 
   public List<Role> getRolesByName(String name) {

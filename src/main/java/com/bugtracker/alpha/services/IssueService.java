@@ -7,6 +7,7 @@ import java.util.Optional;
 import com.bugtracker.alpha.entities.Issue;
 import com.bugtracker.alpha.entities.User;
 import com.bugtracker.alpha.repositories.IssueRepository;
+import com.bugtracker.alpha.repositories.UserRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,7 +21,7 @@ public class IssueService {
     this.issueRepository = issueRepository;
   }
 
-  public Issue getIssue(int id) {
+  public Issue getIssue(long id) {
     Optional<Issue> optionalIssue = issueRepository.findById(id);
     if(!optionalIssue.isPresent()) {
       return null;
@@ -31,10 +32,14 @@ public class IssueService {
   }
 
   public List<Issue> getAllIssues() {
-    return issueRepository.findAll();
+    Iterable<Issue> iterIssues = issueRepository.findAll();
+    ArrayList<Issue> issues = new ArrayList<>();
+
+    iterIssues.forEach(issues::add);
+    return issues;
   }
 
-  public List<User> getAllAssignedusers(int id) {
+  public List<User> getAllAssignedusers(long id) {
     Optional<List<User>> optionalUsers = issueRepository.findAllAssignedUsers(id);
     if(!optionalUsers.isPresent()) {
       return new ArrayList<>();
@@ -44,7 +49,7 @@ public class IssueService {
     }
   }
 
-  public List<Issue> findByCompany(int id) {
+  public List<Issue> findByCompany(long id) {
     Optional<List<Issue>> optionalIssues = issueRepository.findByCompany(id);
     if(!optionalIssues.isPresent()) {
       return new ArrayList<>();
@@ -64,7 +69,7 @@ public class IssueService {
     }
   }
 
-  public List<Issue> findByTitleForUser(String title, int id) {
+  public List<Issue> findByTitleForUser(String title, long id) {
     Optional<List<Issue>> optionalIssues = issueRepository.findByTitleForUser(title, id);
     if(!optionalIssues.isPresent()) {
       return new ArrayList<>();
@@ -84,7 +89,7 @@ public class IssueService {
     }
   }
 
-  public List<Issue> findBySeverityForUser(String severity, int id) {
+  public List<Issue> findBySeverityForUser(String severity, long id) {
     Optional<List<Issue>> optionalIssues = issueRepository.findBySeverityForUser(severity, id);
     if(!optionalIssues.isPresent()) {
       return new ArrayList<>();
@@ -104,7 +109,7 @@ public class IssueService {
     }
   }
 
-  public List<Issue> findByStateForUser(String state, int id) {
+  public List<Issue> findByStateForUser(String state, long id) {
     Optional<List<Issue>> optionalIssues = issueRepository.findByStateForUser(state, id);
     if(!optionalIssues.isPresent()) {
       return new ArrayList<>();
@@ -118,6 +123,7 @@ public class IssueService {
     Optional<Issue> issueOptional = issueRepository.findById(issue.getIssue_id());
     if(!issueOptional.isPresent()) {
       issueRepository.save(issue);
+      issueRepository.assignUserToIssue(issue.getIssue_id(), issue.getCreator().getUserId());
     }
     else {
       //todo logging
@@ -127,15 +133,19 @@ public class IssueService {
   public void updateIssue(Issue issue) {
     Optional<Issue> issueOptional = issueRepository.findById(issue.getIssue_id());
     if(issueOptional.isPresent()) {
-      issueRepository.updateIssue(issue.getTitle(), issue.getDescription(), issue.getSeverity(), issue.getCompany(), issue.getType(), issue.getState(), issue.getDate_created(), issue.getDate_resolved());
+      issueRepository.updateIssue(issue.getTitle(), issue.getDescription(), issue.getSeverity(), issue.getCompany(), issue.getType(), issue.getState(), issue.getCreator(), issue.getDate_created(), issue.getDate_resolved(), issue.getIssue_id());
     }
     else {
       //todo logging
     }
   }
 
-  public void assignUserToIssue(int issue_id, int user_id) {
+  public void assignUserToIssue(long issue_id, long user_id) {
     issueRepository.assignUserToIssue(issue_id, user_id);
+  }
+
+  public void assignMultipleUsersToIssue(long issue_id, List<User> users) {
+    
   }
 
   public void deleteIssue(Issue issue) {

@@ -25,7 +25,10 @@ public class UserService {
 
   public List<User> getAllUsers() {
     logs.userRetrievedSuccessfully("Retrieved all users");
-    return userRepository.findAll();
+    Iterable<User> iterable = userRepository.findAll();
+    ArrayList<User> users = new ArrayList<>();
+    iterable.forEach(users::add);
+    return users;
   }
 
   public List<Issue> getAllIssues(int id) {
@@ -38,15 +41,15 @@ public class UserService {
     }
   }
 
-  public User getUserById(int id) {
-    boolean exists = userRepository.existsById(id);
-    if(!exists) {
+  public User getUserById(long id) {
+    Optional<User> optional = userRepository.findById(id);
+    if(!optional.isPresent()) {
       logs.userDoesntExist("User with id: "+id+" doesnt exist");
       return null;
     }
     else {
       logs.userRetrievedSuccessfully("User with id: "+id+" was retrieved");
-      return userRepository.getById(id);
+      return optional.get();
     }
   }
 
@@ -100,9 +103,9 @@ public class UserService {
   }
 
   public void updateuser(User user) {
-    Optional<User> userOptional = userRepository.findById(user.getUser_id());
+    Optional<User> userOptional = userRepository.findById(user.getUserId());
     if(userOptional.isPresent()) {
-        userRepository.updateUser(user.getEmail(), user.getPassword(), user.getFirst_name(), user.getLast_name(), user.getCompany(), user.getAddress(), user.getPostal_code(), user.getProvince(), user.getCountry(), user.getPhone_num(), user.getCreated_time(), user.getRole(), user.getUser_id());
+        userRepository.updateUser(user.getEmail(), user.getPassword(), user.getFirstName(), user.getLastName(), user.getCompany(), user.getAddress(), user.getPostalCode(), user.getProvince(), user.getCountry(), user.getPhoneNum(), user.getCreatedTime(), user.getRole(), user.getUserId());
      
         logs.updateSuccessful("User: " + user.getEmail() + " was successfully updated");
     } else {
@@ -111,9 +114,9 @@ public class UserService {
   }
 
   public void deleteuser(User user) {
-    Optional<User> userOptional = userRepository.findById(user.getUser_id());
+    Optional<User> userOptional = userRepository.findById(user.getUserId());
     if(userOptional.isPresent()) {
-        userRepository.deleteUser(user.getUser_id());
+        userRepository.deleteUser(user.getUserId());
         logs.userDeletedSuccessfully("user: " + user.getEmail() + " was deleted");
     } else {
         logs.unableToDeleteUser("Unable to delete " + user.getEmail());

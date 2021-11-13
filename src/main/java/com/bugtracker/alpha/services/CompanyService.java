@@ -25,18 +25,22 @@ public class CompanyService {
 
   public List<Company> getAllCompanies() {
     logs.userRetrievedSuccessfully("Retrieved all companies");
-    return companyRepository.findAll();
+
+    Iterable<Company> iterable = companyRepository.findAll();
+    ArrayList<Company> companies = new ArrayList<>();
+    iterable.forEach(companies::add);
+    return companies;
   }
 
-  public Company getCompanyById(int id) {
-    boolean exists = companyRepository.existsById(id);
-    if(!exists) {
+  public Company getCompanyById(long id) {
+    Optional<Company> optional = companyRepository.findById(id);
+    if(!optional.isPresent()) {
       logs.userDoesntExist("Company with id: "+id+" doesnt exsist");
       return null;
     }
     else{
       logs.userRetrievedSuccessfully("Company with id: "+id+" was retrieved");
-      return companyRepository.getById(id);
+      return optional.get();
     }
   }
 
@@ -48,7 +52,7 @@ public class CompanyService {
     }
     else {
       logs.companyDoesntExist("Companies with name: " + name + "don't exist");
-        return new ArrayList<Company>();
+        return new ArrayList<>();
     }
   }
 
