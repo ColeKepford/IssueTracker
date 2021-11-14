@@ -1,6 +1,8 @@
 package com.bugtracker.alpha;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Optional;
 
 import com.bugtracker.alpha.entities.Company;
 import com.bugtracker.alpha.entities.Issue;
@@ -28,7 +30,16 @@ public class DatebaseLoader implements CommandLineRunner {
   
   @Override
   public void run(String... args) throws Exception {
-    iRepo.deleteAll();
+   /* Optional<User> testUserOp = uRepo.findById(1L);
+    User testUser = testUserOp.get();
+    Iterable<Issue> issues = iRepo.findAll();
+    Issue testIssue = issues.iterator().next();
+    System.out.println("\n\n\n\n!!!!!!!\n" + testIssue.getCreator().toString());*/
+
+    System.out.println("\n\n\n!!!STARTING DELETE!!!");
+    iRepo.deleteIssue(1L);
+    iRepo.deleteIssue(2L);
+    System.out.println("\n\n\n!!!ENDING DELETE!!!");
     uRepo.deleteAll();
     cRepo.deleteAll();
     rRepo.deleteAll();
@@ -57,7 +68,7 @@ public class DatebaseLoader implements CommandLineRunner {
     System.out.println("\n\n\n\nUser1 Issues:" + user1.getIssues());
     System.out.println("\nUser2 Issues:" + user2.getIssues());
     
-
+    //iRepo.delete(issue);
     System.out.println("\n\n\n\nIT WORKED!!!!!!");
   }
 }

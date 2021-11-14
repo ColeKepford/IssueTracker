@@ -4,11 +4,8 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -18,10 +15,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.springframework.format.annotation.DateTimeFormat;
+
+import net.bytebuddy.dynamic.scaffold.TypeInitializer.None;
 
 
 @Entity
@@ -52,7 +50,7 @@ public class Issue {
   @DateTimeFormat(pattern = "YYYY-MM-DD hh:mm:ss")
   private LocalDateTime date_resolved;
 
-  @ManyToMany(fetch = FetchType.LAZY, 
+  @ManyToMany(fetch = FetchType.EAGER, 
     cascade =  {CascadeType.ALL}
   )
   @JoinTable(name = "issue_assigned_users",
@@ -73,6 +71,7 @@ public class Issue {
     this.state = state;
     this.creator = creator;
     this.date_created = date_created;
+    assignUser(creator);
     /*this.assignedUsers = Stream.of(assignedUsers).collect(Collectors.toSet());
     this.assignedUsers.forEach(x -> x.getIssues().add(this));*/
   }
@@ -128,6 +127,10 @@ public class Issue {
 
   public User getCreator() {
     return this.creator;
+  }
+
+  public void setCreator(User creator) {
+    this.creator = creator;
   }
 
   public String getState() {

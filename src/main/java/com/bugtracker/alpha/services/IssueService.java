@@ -7,7 +7,6 @@ import java.util.Optional;
 import com.bugtracker.alpha.entities.Issue;
 import com.bugtracker.alpha.entities.User;
 import com.bugtracker.alpha.repositories.IssueRepository;
-import com.bugtracker.alpha.repositories.UserRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

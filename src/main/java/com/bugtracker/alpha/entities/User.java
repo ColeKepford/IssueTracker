@@ -37,7 +37,7 @@ public class User {
   @JoinColumn(name = "role", referencedColumnName = "role_id")
   @ManyToOne(optional = false, fetch = FetchType.EAGER)
   private Role role;
-  @ManyToMany(fetch = FetchType.LAZY,
+  @ManyToMany(fetch = FetchType.EAGER,
     cascade = {
         CascadeType.PERSIST,
         CascadeType.MERGE
