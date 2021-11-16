@@ -56,7 +56,7 @@ public class RoleService {
   }
 
   public void addRole(Role role) {
-    Optional<Role> roleOptional = roleRepository.findById(role.getRole_id());
+    Optional<Role> roleOptional = roleRepository.findById(role.getRoleId());
     if(roleOptional.isPresent()) {
       //todo logging
     }
@@ -68,9 +68,9 @@ public class RoleService {
 
   
   public void updateRole(Role role) {
-    Optional<Role> roleOptional = roleRepository.findById(role.getRole_id());
+    Optional<Role> roleOptional = roleRepository.findById(role.getRoleId());
     if(roleOptional.isPresent()) {
-      roleRepository.updateRole(role.getName(), role.getRole_id());
+      roleRepository.updateRole(role.getName(), role.getRoleId());
       //todo logging
     }
     else {
@@ -79,7 +79,7 @@ public class RoleService {
   }
   
   public void deleteRole(Role role) {
-    Optional<Role> roleOptional = roleRepository.findById(role.getRole_id());
+    Optional<Role> roleOptional = roleRepository.findById(role.getRoleId());
     if(roleOptional.isPresent()) {
       roleRepository.delete(role);
       //todo logging

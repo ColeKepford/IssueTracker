@@ -57,13 +57,33 @@ public class CompanyService {
   }
 
   public void addNewCompany(Company company) {
-    Optional<Company> companyOptional = companyRepository.findById(company.getCompany_id());
+    Optional<Company> companyOptional = companyRepository.findById(company.getCompanyId());
     if(companyOptional.isPresent()) {
-      logs.companyDoesExist("Company with id: " + company.getCompany_id() + " already exists");
+      logs.companyDoesExist("Company with id: " + company.getCompanyId() + " already exists");
     }
     else {
       companyRepository.save(company);
       logs.companyAdded("Company: " + company.getName() + " was succesfully added");
+    }
+  }
+
+  public void updateCompany(Company company) {
+    Optional<Company> companyOptional = companyRepository.findById(company.getCompanyId());
+    if(companyOptional.isPresent()) {
+      companyRepository.updateCompany(company.getName(), company.getCompanyId());
+    }
+    else {
+      logs.companyDoesntExist("Unable to update Company");
+    }
+  }
+
+  public void deleteCompany(Company company) {
+    Optional<Company> companyOptional = companyRepository.findById(company.getCompanyId());
+    if(companyOptional.isPresent()) {
+      companyRepository.delete(company);
+    }
+    else {
+      logs.companyDoesntExist("Unable to delete Company");
     }
   }
 }

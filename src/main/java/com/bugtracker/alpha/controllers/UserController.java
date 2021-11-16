@@ -26,7 +26,7 @@ public class UserController {
     }
 
     @GetMapping("/getUser/{id}")
-    public User getUser(@PathVariable("id")Integer id) {
+    public User getUser(@PathVariable("id")long id) {
         return userService.getUserById(id);
     }
 
@@ -41,7 +41,7 @@ public class UserController {
     }
 
     @GetMapping("/getAllIssues/{id}")
-    public List<Issue> getUsersIssues(@PathVariable int id) {
+    public List<Issue> getUsersIssues(@PathVariable long id) {
       return userService.getAllIssues(id);
     }
 

@@ -8,7 +8,8 @@ public class Role {
   
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private long role_id;
+  @Column(name = "role_id")
+  private long roleId;
   private String name;
 
   public Role() {
@@ -19,12 +20,17 @@ public class Role {
     this.name = name;
   }
 
-  public long getRole_id() {
-    return this.role_id;
+  public Role(long roleId, String name) {
+    this.roleId = roleId;
+    this.name = name;
   }
 
-  public void setRole_id(int role_id) {
-    this.role_id = role_id;
+  public long getRoleId() {
+    return this.roleId;
+  }
+
+  public void setRoleId(int roleId) {
+    this.roleId = roleId;
   }
 
   public String getName() {
@@ -35,4 +41,11 @@ public class Role {
     this.name = name;
   }
 
+  @Override
+  public String toString() {
+    return "{" +
+      " role_id='" + getRoleId() + "'" +
+      ", name='" + getName() + "'" +
+      "}";
+  }
 }

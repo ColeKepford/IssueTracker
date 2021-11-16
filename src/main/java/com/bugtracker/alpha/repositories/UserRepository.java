@@ -1,5 +1,6 @@
 package com.bugtracker.alpha.repositories;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,7 +23,7 @@ public interface UserRepository extends PagingAndSortingRepository<User, Long> {
     Optional<User> findUser(String email, String password);
 
     @Query("Select u FROM User u WHERE u.lastName LIKE ?1%")
-    Optional<List<User>> findUsersByLastName(String last_name);
+    Optional<List<User>> findUsersByLastName(String lastName);
 
     @Query("SELECT u FROM User u WHERE u.company=?1")
     Optional<List<User>> findUsersByCompany(long id);
@@ -33,7 +34,7 @@ public interface UserRepository extends PagingAndSortingRepository<User, Long> {
     @Transactional
     @Modifying
     @Query("UPDATE User SET email = ?1, password = ?2, first_name = ?3, last_name = ?4, company = ?5, address = ?6, postal_code = ?7, province=?8, country=?9, phone_num = ?10, created_time = ?11, role = ?12 WHERE user_id = ?13")
-    void updateUser(String email, String password, String first_name, String last_name, Company company, String address, String postal_code, String province, String country, String phone_num, String created_time, Role role, long id);
+    void updateUser(String email, String password, String firstName, String lastName, Company company, String address, String postalCode, String province, String country, String phoneNum, LocalDateTime createdTime, Role role, long id);
 
     @Transactional
     @Modifying

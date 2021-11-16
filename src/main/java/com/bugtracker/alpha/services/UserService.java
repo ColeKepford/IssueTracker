@@ -31,7 +31,7 @@ public class UserService {
     return users;
   }
 
-  public List<Issue> getAllIssues(int id) {
+  public List<Issue> getAllIssues(long id) {
     Optional<List<Issue>> optionalIssues = userRepository.getAllIssues(id);
     if(!optionalIssues.isPresent()) {
       return new ArrayList<>();

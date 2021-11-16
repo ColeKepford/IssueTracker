@@ -30,19 +30,15 @@ public class DatebaseLoader implements CommandLineRunner {
   
   @Override
   public void run(String... args) throws Exception {
-   /* Optional<User> testUserOp = uRepo.findById(1L);
-    User testUser = testUserOp.get();
-    Iterable<Issue> issues = iRepo.findAll();
-    Issue testIssue = issues.iterator().next();
-    System.out.println("\n\n\n\n!!!!!!!\n" + testIssue.getCreator().toString());*/
-
+   
     System.out.println("\n\n\n!!!STARTING DELETE!!!");
-    iRepo.deleteIssue(1L);
-    iRepo.deleteIssue(2L);
-    System.out.println("\n\n\n!!!ENDING DELETE!!!");
+    Iterable<Issue> issues = iRepo.findAll();
+    issues.forEach(e -> iRepo.deleteIssue(e.getIssueId()));
     uRepo.deleteAll();
     cRepo.deleteAll();
     rRepo.deleteAll();
+    System.out.println("\n\n\n!!!ENDING DELETE!!!");
+
     Company company = new Company("bigCorp");
     cRepo.save(company);
 
@@ -51,24 +47,25 @@ public class DatebaseLoader implements CommandLineRunner {
     rRepo.save(role);
     
     
-    User user1 = new User("cole.kepford@gmail.com", "password", "Cole", "Kepford", company, "119 Canata Close", "t2w1p8", "AB", "Canada", "587-215-9106", "2021-11-04 10:05:25", role);
-    //uRepo.save(user1);
-    User user2 = new User("greg.charles@email.com", "password", "Greg", "Charles", company, "123 Street Place", "t3y0e9", "AB", "Canada", "123-456-7890", "2021-11-04 10:05:25", role);
-    //uRepo.save(user2);
+    User user1 = new User("cole.kepford@gmail.com", "password", "Cole", "Kepford", company, "119 Canata Close", "t2w1p8", "AB", "Canada", "587-215-9106", LocalDateTime.now(), role);
+    User user2 = new User("greg.charles@email.com", "password", "Greg", "Charles", company, "123 Street Place", "t3y0e9", "AB", "Canada", "123-456-7890", LocalDateTime.now(), role);
     
 
     
     Issue issue = new Issue("UI won't load", "Page won't load", "Extreme", company, "UI", "Not Fixed", user1, LocalDateTime.now());
+    Issue issue2 = new Issue("API Crashes when deleting Issue object", "When using the default repositorie's delete methods a PropertyValueException is thrown.", "Extreme", company, "API", "Not Fixed", user1, LocalDateTime.now());
     issue.assignUser(user1);
     issue.assignUser(user2);
+    issue2.assignUser(user1);
     iRepo.save(issue);
+    iRepo.save(issue2);
     //iRepo.assignUserToIssue(issue.getIssue_id(), user1.getUserId());
     //iRepo.assignUserToIssue(issue.getIssue_id(), user2.getUserId());
 
     System.out.println("\n\n\n\nUser1 Issues:" + user1.getIssues());
     System.out.println("\nUser2 Issues:" + user2.getIssues());
     
-    //iRepo.delete(issue);
+
     System.out.println("\n\n\n\nIT WORKED!!!!!!");
   }
 }

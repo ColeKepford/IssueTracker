@@ -119,10 +119,10 @@ public class IssueService {
   }
 
   public void addNewIssue(Issue issue) {
-    Optional<Issue> issueOptional = issueRepository.findById(issue.getIssue_id());
+    Optional<Issue> issueOptional = issueRepository.findById(issue.getIssueId());
     if(!issueOptional.isPresent()) {
       issueRepository.save(issue);
-      issueRepository.assignUserToIssue(issue.getIssue_id(), issue.getCreator().getUserId());
+      issueRepository.assignUserToIssue(issue.getIssueId(), issue.getCreator().getUserId());
     }
     else {
       //todo logging
@@ -130,25 +130,21 @@ public class IssueService {
   }
 
   public void updateIssue(Issue issue) {
-    Optional<Issue> issueOptional = issueRepository.findById(issue.getIssue_id());
+    Optional<Issue> issueOptional = issueRepository.findById(issue.getIssueId());
     if(issueOptional.isPresent()) {
-      issueRepository.updateIssue(issue.getTitle(), issue.getDescription(), issue.getSeverity(), issue.getCompany(), issue.getType(), issue.getState(), issue.getCreator(), issue.getDate_created(), issue.getDate_resolved(), issue.getIssue_id());
+      issueRepository.updateIssue(issue.getTitle(), issue.getDescription(), issue.getSeverity(), issue.getCompany(), issue.getType(), issue.getState(), issue.getCreator(), issue.getDateCreated(), issue.getDateResolved(), issue.getIssueId());
     }
     else {
       //todo logging
     }
   }
 
-  public void assignUserToIssue(long issue_id, long user_id) {
-    issueRepository.assignUserToIssue(issue_id, user_id);
-  }
-
-  public void assignMultipleUsersToIssue(long issue_id, List<User> users) {
-    
+  public void assignUserToIssue(long issueId, long userId) {
+    issueRepository.assignUserToIssue(issueId, userId);
   }
 
   public void deleteIssue(Issue issue) {
-    Optional<Issue> issueOptional = issueRepository.findById(issue.getIssue_id());
+    Optional<Issue> issueOptional = issueRepository.findById(issue.getIssueId());
     if(issueOptional.isPresent()) {
       issueRepository.delete(issue);
     }

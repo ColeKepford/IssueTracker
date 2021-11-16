@@ -1,11 +1,14 @@
 package com.bugtracker.alpha.entities;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Objects;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -19,16 +22,14 @@ import javax.persistence.Table;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
-import net.bytebuddy.dynamic.scaffold.TypeInitializer.None;
-
-
 @Entity
 @Table(name="issue")
 public class Issue {
   
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private long issue_id;
+  @Column(name = "issue_id")
+  private long issueId;
   private String title;
   private String description;
   private String severity;
@@ -40,18 +41,21 @@ public class Issue {
   private String type;
   private String state;
 
+  
   @JoinColumn(name = "creator", referencedColumnName = "user_id")
   @ManyToOne(optional = false, fetch = FetchType.EAGER)
   private User creator;
   
   @DateTimeFormat(pattern = "YYYY-MM-DD hh:mm:ss")
-  private LocalDateTime date_created;
+  @Column(name = "date_created")
+  private LocalDateTime dateCreated;
   
   @DateTimeFormat(pattern = "YYYY-MM-DD hh:mm:ss")
-  private LocalDateTime date_resolved;
+  @Column(name = "date_resolved")
+  private LocalDateTime dateResolved;
 
   @ManyToMany(fetch = FetchType.EAGER, 
-    cascade =  {CascadeType.ALL}
+    cascade = CascadeType.ALL
   )
   @JoinTable(name = "issue_assigned_users",
       joinColumns = @JoinColumn(name = "issue", nullable = false, updatable = false),
@@ -62,7 +66,7 @@ public class Issue {
   public Issue() {
   }
 
-  public Issue(String title, String description, String severity, Company company, String type, String state, User creator, LocalDateTime date_created/*, User ... assignedUsers*/)  {
+  public Issue(String title, String description, String severity, Company company, String type, String state, User creator, LocalDateTime dateCreated/*, User ... assignedUsers*/)  {
     this.title = title;
     this.description = description;
     this.severity = severity;
@@ -70,18 +74,33 @@ public class Issue {
     this.type = type;
     this.state = state;
     this.creator = creator;
-    this.date_created = date_created;
+    this.dateCreated = dateCreated;
     assignUser(creator);
     /*this.assignedUsers = Stream.of(assignedUsers).collect(Collectors.toSet());
     this.assignedUsers.forEach(x -> x.getIssues().add(this));*/
   }
 
-  public long getIssue_id() {
-    return Long.valueOf(this.issue_id);
+  public Issue(long issueId, String title, String description, String severity, Company company, String type, String state, User creator, LocalDateTime dateCreated, LocalDateTime dateResolved, Set<User> assignedUsers)  {
+    this.issueId = issueId;
+    this.title = title;
+    this.description = description;
+    this.severity = severity;
+    this.company = company;
+    this.type = type;
+    this.state = state;
+    this.creator = creator;
+    this.dateCreated = dateCreated;
+    this.dateResolved = dateResolved;
+    this.assignedUsers = assignedUsers;
+    assignUser(creator);
   }
 
-  public void setIssue_id(long issue_id) {
-    this.issue_id = Long.valueOf(issue_id);
+  public long getIssueId() {
+    return Long.valueOf(this.issueId);
+  }
+
+  public void setIssueId(long issueId) {
+    this.issueId = Long.valueOf(issueId);
   }
 
   public String getTitle() {
@@ -113,7 +132,7 @@ public class Issue {
   }
 
   public void setCompany(Company company) {
-    this.company.setCompany_id(company.getCompany_id());
+    this.company.setCompanyId(company.getCompanyId());
     this.company.setName(company.getName());
   }
 
@@ -131,6 +150,7 @@ public class Issue {
 
   public void setCreator(User creator) {
     this.creator = creator;
+    assignUser(creator);
   }
 
   public String getState() {
@@ -146,20 +166,24 @@ public class Issue {
   }
 
 
-  public LocalDateTime getDate_created() {
-    return this.date_created;
+  public LocalDateTime getDateCreated() {
+    return this.dateCreated;
   }
 
-  public void setDate_created(LocalDateTime date_created) {
-    this.date_created = date_created;
+  public void setDateCreated(LocalDateTime dateCreated) {
+    this.dateCreated = dateCreated;
   }
 
-  public LocalDateTime getDate_resolved() {
-    return this.date_resolved;
+  public LocalDateTime getDateResolved() {
+    return this.dateResolved;
   }
 
-  public void setDate_resolved(LocalDateTime date_resolved) {
-    this.date_resolved = date_resolved;
+  public void setDateResolved(LocalDateTime dateResolved) {
+    this.dateResolved = dateResolved;
+  }
+
+  public Set<User> getAssignedUsers() {
+    return this.assignedUsers;
   }
 
   public void assignUser(User user) {
@@ -176,18 +200,23 @@ public class Issue {
     }
   }
 
+
   @Override
   public String toString() {
     return "{" +
-      " issue_id='" + getIssue_id() + "'" +
+      " issueId='" + getIssueId() + "'" +
       ", title='" + getTitle() + "'" +
       ", description='" + getDescription() + "'" +
       ", severity='" + getSeverity() + "'" +
       ", company='" + getCompany() + "'" +
       ", type='" + getType() + "'" +
       ", state='" + getState() + "'" +
+      ", creator='" + getCreator().getEmail() + "'" +
+      ", dateCreated='" + getDateCreated() + "'" +
+      ", dateResolved='" + getDateResolved() + "'" +
       "}";
   }
+  
 
   @Override
     public boolean equals(Object o) {
@@ -197,12 +226,12 @@ public class Issue {
             return false;
         }
         Issue issue = (Issue) o;
-        return issue_id == issue.issue_id && Objects.equals(title, issue.title) && Objects.equals(description, issue.description) && Objects.equals(severity, issue.severity) && Objects.equals(company, issue.company) && Objects.equals(type, issue.type) && Objects.equals(state, issue.state) && Objects.equals(creator, issue.creator) && Objects.equals(date_created, issue.date_created) && Objects.equals(date_resolved, issue.date_resolved) && Objects.equals(assignedUsers, issue.assignedUsers);
+        return issueId == issue.issueId && Objects.equals(title, issue.title) && Objects.equals(description, issue.description) && Objects.equals(severity, issue.severity) && Objects.equals(company, issue.company) && Objects.equals(type, issue.type) && Objects.equals(state, issue.state) && Objects.equals(creator, issue.creator) && Objects.equals(dateCreated, issue.dateCreated) && Objects.equals(dateResolved, issue.dateResolved) && Objects.equals(assignedUsers, issue.assignedUsers);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(issue_id, title, description, severity, company, type, state, creator, date_created, date_resolved);
+    return Objects.hash(issueId, title, description, severity, company, type, state, creator, dateCreated, dateResolved);
   }
 
 }

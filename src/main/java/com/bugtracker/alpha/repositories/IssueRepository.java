@@ -46,7 +46,7 @@ public interface IssueRepository extends PagingAndSortingRepository<Issue, Long>
   @Transactional
   @Modifying
   @Query(value="INSERT INTO issue_assigned_users VALUES(?1, ?2)", nativeQuery = true)
-  void assignUserToIssue(long issue_id, long user_id);
+  void assignUserToIssue(long issueId, long userId);
 
   @Transactional
   @Modifying
@@ -55,6 +55,6 @@ public interface IssueRepository extends PagingAndSortingRepository<Issue, Long>
 
   @Transactional
   @Modifying
-  @Query("UPDATE Issue i SET title=?1, description=?2, severity=?3, company=?4, type=?5, state=?6, creator=?7, date_created=?8, date_resolved=?9 WHERE i.issue_id=?10")
-  void updateIssue(String title, String description, String severity, Company company, String type, String state, User creator, LocalDateTime date_created, LocalDateTime date_resolved, long id);
+  @Query("UPDATE Issue i SET title=?1, description=?2, severity=?3, company=?4, type=?5, state=?6, creator=?7, date_created=?8, date_resolved=?9 WHERE issue_id=?10")
+  void updateIssue(String title, String description, String severity, Company company, String type, String state, User creator, LocalDateTime dateCreated, LocalDateTime dateResolved, long id);
 }

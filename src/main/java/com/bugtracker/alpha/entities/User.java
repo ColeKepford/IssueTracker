@@ -1,10 +1,14 @@
 package com.bugtracker.alpha.entities;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
 import javax.persistence.*;
+
+import com.bugtracker.alpha.dtos.CompanyDto;
+
 import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
@@ -33,7 +37,7 @@ public class User {
   private String phoneNum;
   @DateTimeFormat(pattern = "yyyy-MM-dd")
   @Column(name="created_time")
-  private String createdTime;
+  private LocalDateTime createdTime;
   @JoinColumn(name = "role", referencedColumnName = "role_id")
   @ManyToOne(optional = false, fetch = FetchType.EAGER)
   private Role role;
@@ -50,7 +54,7 @@ public class User {
   }
 
   public User(String email, String password, String firstName, String lastName, Company company, String address,
-      String postalCode, String province, String country, String phoneNum, String createdTime, Role role) {
+      String postalCode, String province, String country, String phoneNum, LocalDateTime createdTime, Role role) {
     this.email = email;
     this.password = password;
     this.firstName = firstName;
@@ -63,6 +67,24 @@ public class User {
     this.phoneNum = phoneNum;
     this.createdTime = createdTime;
     this.role = role;
+  }
+
+  public User(long userId, String email, String password, String firstName, String lastName, Company company, String address,
+      String postalCode, String province, String country, String phoneNum, LocalDateTime createdTime, Role role, Set<Issue> issues) {
+    this.userId = userId;
+    this.email = email;
+    this.password = password;
+    this.firstName = firstName;
+    this.lastName = lastName;
+    this.company = company;
+    this.address = address;
+    this.postalCode = postalCode;
+    this.province = province;
+    this.country = country;
+    this.phoneNum = phoneNum;
+    this.createdTime = createdTime;
+    this.role = role;
+    this.issues = issues;
   }
 
   public long getUserId() {
@@ -153,11 +175,11 @@ public class User {
     this.phoneNum = phoneNum;
   }
 
-  public String getCreatedTime() {
+  public LocalDateTime getCreatedTime() {
     return this.createdTime;
   }
 
-  public void setCreatedTime(String createdTime) {
+  public void setCreatedTime(LocalDateTime createdTime) {
     this.createdTime = createdTime;
   }
 
@@ -199,14 +221,14 @@ public class User {
       ", password='" + getPassword() + "'" +
       ", firstName='" + getFirstName() + "'" +
       ", lastName='" + getLastName() + "'" +
-      ", company='" + getCompany() + "'" +
+      ", company='" + getCompany().toString() + "'" +
       ", address='" + getAddress() + "'" +
       ", postalCode='" + getPostalCode() + "'" +
       ", province='" + getProvince() + "'" +
       ", country='" + getCountry() + "'" +
       ", phoneNum='" + getPhoneNum() + "'" +
       ", createdTime='" + getCreatedTime() + "'" +
-      ", role='" + getRole() + "'" +
+      ", role='" + getRole().toString() + "'" +
       ", issues='" + getIssues() + "'" +
       "}";
   }

@@ -7,7 +7,8 @@ import javax.persistence.*;
 public class Company {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private long company_id;
+  @Column(name = "company_id")
+  private long companyId;
   private String name;
 
   public Company() {
@@ -17,13 +18,18 @@ public class Company {
   public Company(String name) {
     this.name = name;
   }
-  
-  public long getCompany_id() {
-    return this.company_id;
+
+  public Company(long id, String name) {
+    this.companyId = id;
+    this.name = name;
   }
 
-  public void setCompany_id(long company_id) {
-    this.company_id = company_id;
+  public long getCompanyId() {
+    return this.companyId;
+  }
+
+  public void setCompanyId(long companyId) {
+    this.companyId = companyId;
   }
 
   public String getName() {
@@ -32,5 +38,13 @@ public class Company {
 
   public void setName(String name) {
     this.name = name;
+  }
+
+  @Override
+  public String toString() {
+    return "{" +
+      " company_id='" + getCompanyId() + "'" +
+      ", name='" + getName() + "'" +
+      "}";
   }
 }
