@@ -2,12 +2,15 @@ package com.bugtracker.alpha.dtos;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Objects;
 import java.util.Set;
 
 import com.bugtracker.alpha.entities.Issue;
 import com.bugtracker.alpha.entities.User;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -25,6 +28,7 @@ public class IssueDto implements Serializable{
   private LocalDateTime dateCreated;
   @DateTimeFormat(pattern = "YYYY-MM-DD hh:mm:ss")
   private LocalDateTime dateResolved;
+  @JsonBackReference
   private Set<UserDto> assignedUsers;
 
   public IssueDto() {
@@ -42,13 +46,7 @@ public class IssueDto implements Serializable{
     this.creatorDto = new UserDto(issue.getCreator());
     this.dateCreated = issue.getDateCreated();
     this.dateResolved = issue.getDateResolved();
-
-    Iterator<User> iterator = issue.getUsers().iterator();
-    UserDto newUser;
-    while(iterator.hasNext()) {
-      newUser = new UserDto(iterator.next());
-      assignedUsers.add(newUser);
-    }
+    this.assignedUsers = new HashSet<>();
   }
 
 

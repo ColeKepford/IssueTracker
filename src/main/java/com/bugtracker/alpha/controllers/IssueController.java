@@ -3,12 +3,12 @@ package com.bugtracker.alpha.controllers;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.bugtracker.alpha.dtos.DtoConverter;
 import com.bugtracker.alpha.dtos.IssueDto;
-import com.bugtracker.alpha.entities.Company;
 import com.bugtracker.alpha.entities.Issue;
 import com.bugtracker.alpha.services.IssueService;
 
-import org.modelmapper.ModelMapper;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,12 +24,12 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin(origins="http://localhost:3000")
 public class IssueController {
   private final IssueService issueService;
-  private final ModelMapper modelMapper;
+  private final DtoConverter dtoConverter;
 
   @Autowired
-  public IssueController(IssueService issueService, ModelMapper modelMapper) {
+  public IssueController(IssueService issueService, DtoConverter dtoConverter) {
     this.issueService = issueService;
-    this.modelMapper = modelMapper;
+    this.dtoConverter = dtoConverter;
   }
 
   @GetMapping("/allIssues")
@@ -106,11 +106,10 @@ public class IssueController {
   }
   
   private IssueDto convertToDto(Issue issue) {
-    return new IssueDto(issue);
+    return dtoConverter.issueToDto(issue);
   }
 
   private Issue convertToEntity(IssueDto issueDto) {
-    Company company = new Company(issueDto.getCompanyDto().getCompanyId(), issueDto.getCompanyDto().getName());
-    return new IssueDto(issueDto.getIssueId(), issueDto.getTitle(), issueDto.getDescription(), issueDto.getSeverity(), company, issueDto.getType(), issueDto.getState(),
+    return dtoConverter.issueDtoToEntity(issueDto);
   }
 }

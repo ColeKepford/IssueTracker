@@ -7,6 +7,8 @@ import java.util.Set;
 
 import com.bugtracker.alpha.entities.Issue;
 import com.bugtracker.alpha.entities.User;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -26,7 +28,9 @@ public class UserDto implements Serializable{
   @DateTimeFormat(pattern = "YYYY-MM-DD hh:mm:ss")
   private LocalDateTime createdTime;
   private RoleDto roleDto;
+  @JsonManagedReference
   private Set<IssueDto> issuesDto;
+  
 
   public UserDto() {
 
@@ -46,12 +50,12 @@ public class UserDto implements Serializable{
     this.phoneNum = user.getPhoneNum();
     this.createdTime = user.getCreatedTime();
     this.roleDto = new RoleDto(user.getRole());
-    Iterator<Issue> iterator = user.getIssues().iterator();
+    /*Iterator<Issue> iterator = user.getIssues().iterator();
     IssueDto newIssueDto;
     while(iterator.hasNext()) {
       newIssueDto = new IssueDto(iterator.next());
       issuesDto.add(newIssueDto);
-    }
+    }*/
   }
 
   public long getUserId() {

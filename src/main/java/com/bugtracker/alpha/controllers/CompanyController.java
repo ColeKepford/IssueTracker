@@ -4,24 +4,24 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.bugtracker.alpha.dtos.CompanyDto;
+import com.bugtracker.alpha.dtos.DtoConverter;
 import com.bugtracker.alpha.entities.Company;
 import com.bugtracker.alpha.services.CompanyService;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/companies")
+@RequestMapping("/Companies")
 @CrossOrigin(origins="http://localhost:3000")
 public class CompanyController {
   private final CompanyService companyService;
-  private ModelMapper modelMapper;
+  private DtoConverter dtoConverter;
 
   @Autowired
-    public CompanyController(CompanyService companyService, ModelMapper modelMapper) {
+    public CompanyController(CompanyService companyService, DtoConverter dtoConverter) {
       this.companyService = companyService;
-      this.modelMapper = modelMapper;
+      this.dtoConverter = dtoConverter;
     }
 
     @GetMapping("/allCompanies")
@@ -61,10 +61,10 @@ public class CompanyController {
     }
 
     private CompanyDto convertToDto(Company company) {
-      return new CompanyDto(company);
+      return dtoConverter.companyToDto(company); 
     }
 
     private Company convertToEntity(CompanyDto companyDto) {
-      return new Company(companyDto.getCompanyId(), companyDto.getName());
+      return dtoConverter.companyDtoToEntity(companyDto);
     }
 }
