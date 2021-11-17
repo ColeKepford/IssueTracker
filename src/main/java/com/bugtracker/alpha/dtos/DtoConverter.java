@@ -6,7 +6,7 @@ import java.util.Set;
 
 import com.bugtracker.alpha.entities.*;
 
-public class DtoConverter {
+public final class DtoConverter {
   public CompanyDto companyToDto(Company company) {
     return new CompanyDto(company);
   }
@@ -20,7 +20,10 @@ public class DtoConverter {
   }
 
   public Issue issueDtoToEntity(IssueDto dto) {
-    return new Issue(dto.getIssueId(), dto.getTitle(), dto.getDescription(), dto.getSeverity(), companyDtoToEntity(dto.getCompanyDto()), dto.getType(),  dto.getState(), userDtoToEntity(dto.getCreatorDto()), dto.getDateCreated(), dto.getDateResolved(), userDtosToEntities(dto.getAssignedUsers()));
+    return new Issue(dto.getIssueId(), dto.getTitle(), dto.getDescription(), dto.getSeverity(), companyDtoToEntity(dto.getCompanyDto()), dto.getType(),  dto.getState(), userDtoToEntity(dto.getCreatorDto()), dto.getDateCreated(), dto.getDateResolved(), 
+    
+    
+    (dto.getAssignedUsers()));
   }
 
   public Set<IssueDto> issuesToDtos(Set<Issue> issues) {
@@ -74,7 +77,5 @@ public class DtoConverter {
       users.add(userDtoToEntity(iter.next()));
     }
     return users;
-  }
-
-  
+  } 
 }
