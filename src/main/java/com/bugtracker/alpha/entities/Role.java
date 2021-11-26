@@ -1,5 +1,7 @@
 package com.bugtracker.alpha.entities;
 
+import java.io.Serializable;
+
 import javax.persistence.*;
 
 @Entity

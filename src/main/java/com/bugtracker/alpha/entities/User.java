@@ -1,5 +1,6 @@
 package com.bugtracker.alpha.entities;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Objects;
@@ -7,7 +8,8 @@ import java.util.Set;
 
 import javax.persistence.*;
 
-import com.bugtracker.alpha.dtos.CompanyDto;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -41,13 +43,15 @@ public class User {
   @JoinColumn(name = "role", referencedColumnName = "role_id")
   @ManyToOne(optional = false, fetch = FetchType.EAGER)
   private Role role;
-  @ManyToMany(fetch = FetchType.EAGER,
-    cascade = {
-        CascadeType.PERSIST,
-        CascadeType.MERGE
-    },
-    mappedBy = "assignedUsers")
-  private Set<Issue> issues = new HashSet<>();
+
+  /*@JsonBackReference
+  @ManyToMany(fetch = FetchType.LAZY,
+    cascade = {CascadeType.ALL})
+  @JoinTable(name = "issue_assigned_users",
+      joinColumns = @JoinColumn(name = "user", nullable = false, updatable = false),
+      inverseJoinColumns = @JoinColumn(name = "issue", nullable = false, updatable = false))
+  @JsonManagedReference
+  private Set<Issue> issues = new HashSet<>();*/
 
   public User() {
 
@@ -67,24 +71,6 @@ public class User {
     this.phoneNum = phoneNum;
     this.createdTime = createdTime;
     this.role = role;
-  }
-
-  public User(long userId, String email, String password, String firstName, String lastName, Company company, String address,
-      String postalCode, String province, String country, String phoneNum, LocalDateTime createdTime, Role role, Set<Issue> issues) {
-    this.userId = userId;
-    this.email = email;
-    this.password = password;
-    this.firstName = firstName;
-    this.lastName = lastName;
-    this.company = company;
-    this.address = address;
-    this.postalCode = postalCode;
-    this.province = province;
-    this.country = country;
-    this.phoneNum = phoneNum;
-    this.createdTime = createdTime;
-    this.role = role;
-    this.issues = issues;
   }
 
   public long getUserId() {
@@ -191,6 +177,7 @@ public class User {
     this.role = role;
   }
 
+  /*
   public Set<Issue> getIssues() {
     return this.issues;
   }
@@ -211,7 +198,7 @@ public class User {
       issues.remove(issue);
       issue.removeUser(this);
     }
-  }
+  }*/
 
   @Override
   public String toString() {
@@ -229,7 +216,6 @@ public class User {
       ", phoneNum='" + getPhoneNum() + "'" +
       ", createdTime='" + getCreatedTime() + "'" +
       ", role='" + getRole().toString() + "'" +
-      ", issues='" + getIssues() + "'" +
       "}";
   }
 
@@ -241,7 +227,7 @@ public class User {
             return false;
         }
         User user = (User) o;
-        return userId == user.userId && Objects.equals(email, user.email) && Objects.equals(password, user.password) && Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName) && Objects.equals(company, user.company) && Objects.equals(address, user.address) && Objects.equals(postalCode, user.postalCode) && Objects.equals(province, user.province) && Objects.equals(country, user.country) && Objects.equals(phoneNum, user.phoneNum) && Objects.equals(createdTime, user.createdTime) && Objects.equals(role, user.role) && Objects.equals(issues, user.issues);
+        return userId == user.userId && Objects.equals(email, user.email) && Objects.equals(password, user.password) && Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName) && Objects.equals(company, user.company) && Objects.equals(address, user.address) && Objects.equals(postalCode, user.postalCode) && Objects.equals(province, user.province) && Objects.equals(country, user.country) && Objects.equals(phoneNum, user.phoneNum) && Objects.equals(createdTime, user.createdTime) && Objects.equals(role, user.role);
   }
 
   @Override

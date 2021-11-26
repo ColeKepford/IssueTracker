@@ -24,70 +24,60 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin(origins="http://localhost:3000")
 public class IssueController {
   private final IssueService issueService;
-  private final DtoConverter dtoConverter;
 
   @Autowired
-  public IssueController(IssueService issueService, DtoConverter dtoConverter) {
+  public IssueController(IssueService issueService) {
     this.issueService = issueService;
-    this.dtoConverter = dtoConverter;
   }
 
   @GetMapping("/allIssues")
-  public List<IssueDto> getAllIssues(){
-    List<Issue> issues = issueService.getAllIssues();
-    return issues.stream().map(this::convertToDto).collect(Collectors.toList());
+  public List<Issue> getAllIssues(){
+    return issueService.getAllIssues();
   }
 
   @GetMapping("/getIssue/{id}")
-  public IssueDto getIssue(@PathVariable("id")long id) {
-    return convertToDto(issueService.getIssue(id));
+  public Issue getIssue(@PathVariable("id")long id) {
+    return issueService.getIssue(id);
   }
 
   @GetMapping("/getByCompany/{id}")
-  public List<IssueDto> getIssuesByCompany(@PathVariable("id")long id) {
-    List<Issue> issues = issueService.findByCompany(id);
-    return issues.stream().map(this::convertToDto).collect(Collectors.toList());
+  public List<Issue> getIssuesByCompany(@PathVariable("id")long id) {
+    return issueService.findByCompany(id);
   }
 
   @GetMapping("/findByTitle/{title}")
-  public List<IssueDto> findByTitle(@PathVariable("title")String title) {
-    List<Issue> issues = issueService.findByTitle(title);
-    return issues.stream().map(this::convertToDto).collect(Collectors.toList());
+  public List<Issue> findByTitle(@PathVariable("title")String title) {
+    return issueService.findByTitle(title);
   }
 
   @GetMapping("/findByTitleUser/{title}&{id}")
-  public List<IssueDto> findByTitleForUser(@PathVariable("title")String title, @PathVariable("id")long id) {
-    List<Issue> issues = issueService.findByTitleForUser(title, id);
-    return issues.stream().map(this::convertToDto).collect(Collectors.toList());
+  public List<Issue> findByTitleForUser(@PathVariable("title")String title, @PathVariable("id")long id) {
+    return issueService.findByTitleForUser(title, id);
   }
 
   @GetMapping("/findBySeverity/{severity}")
-  public List<IssueDto> findBySeverity(@PathVariable("severity")String severity) {
-    List<Issue> issues = issueService.findBySeverity(severity);
-    return issues.stream().map(this::convertToDto).collect(Collectors.toList());
+  public List<Issue> findBySeverity(@PathVariable("severity")String severity) {
+    return issueService.findBySeverity(severity);
   }
 
   @GetMapping("/findBySeverity/{severity}&{id}")
-  public List<IssueDto> findBySeverity(@PathVariable("severity")String severity, @PathVariable("id")long id) {
-    List<Issue> issues = issueService.findBySeverityForUser(severity, id);
-    return issues.stream().map(this::convertToDto).collect(Collectors.toList());
+  public List<Issue> findBySeverity(@PathVariable("severity")String severity, @PathVariable("id")long id) {
+    return issueService.findBySeverityForUser(severity, id);
   }
 
   @GetMapping("/findByState/{state}")
-  public List<IssueDto> findByState(@PathVariable("state")String state) {
-    List<Issue> issues = issueService.findByState(state);
-    return issues.stream().map(this::convertToDto).collect(Collectors.toList());
+  public List<Issue> findByState(@PathVariable("state")String state) {
+    return issueService.findByState(state);
   }
 
   @GetMapping("/findByState/{state}&{id}")
-  public List<IssueDto> findByStateForUser(@PathVariable("state")String state, @PathVariable("id") long id) {
-    List<Issue> issues = issueService.findByStateForUser(state, id);
-    return issues.stream().map(this::convertToDto).collect(Collectors.toList());
+  public List<Issue> findByStateForUser(@PathVariable("state")String state, @PathVariable("id") long id) {
+    return issueService.findByStateForUser(state, id);
   }
 
   @PostMapping(path="/newIssue", consumes="application/json", produces="application/json")
-  public void addIssue(@RequestBody IssueDto issueDto) {
-    issueService.addNewIssue(convertToEntity(issueDto));
+  public void addIssue(@RequestBody Issue issue) {
+    issueService.addNewIssue(issue);
   }
 
   /*@PostMapping(path="/assignIssue/{issue_id}&{user_id}")
@@ -96,20 +86,12 @@ public class IssueController {
   }*/
 
   @PutMapping(path="/deleteIssue")
-  public void deleteIssue(@RequestBody IssueDto issueDto) {
-    issueService.deleteIssue(convertToEntity(issueDto));
+  public void deleteIssue(@RequestBody Issue issue) {
+    issueService.deleteIssue(issue);
   }
 
   @PutMapping(path="/updateIssue")
-  public void updateIssue(@RequestBody IssueDto issueDto) {
-    issueService.updateIssue(convertToEntity(issueDto));
-  }
-  
-  private IssueDto convertToDto(Issue issue) {
-    return dtoConverter.issueToDto(issue);
-  }
-
-  private Issue convertToEntity(IssueDto issueDto) {
-    return dtoConverter.issueDtoToEntity(issueDto);
+  public void updateIssue(@RequestBody Issue issue) {
+    issueService.updateIssue(issue);
   }
 }

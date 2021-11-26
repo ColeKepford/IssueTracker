@@ -7,7 +7,7 @@ import java.util.Set;
 import com.bugtracker.alpha.entities.*;
 
 public final class DtoConverter {
-  public CompanyDto companyToDto(Company company) {
+  /*public CompanyDto companyToDto(Company company) {
     return new CompanyDto(company);
   }
 
@@ -77,5 +77,5 @@ public final class DtoConverter {
       users.add(userDtoToEntity(iter.next()));
     }
     return users;
-  } 
+  }*/
 }

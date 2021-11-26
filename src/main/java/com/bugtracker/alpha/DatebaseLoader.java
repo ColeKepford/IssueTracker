@@ -2,6 +2,7 @@ package com.bugtracker.alpha;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Optional;
 
 import com.bugtracker.alpha.entities.Company;
@@ -32,8 +33,13 @@ public class DatebaseLoader implements CommandLineRunner {
   public void run(String... args) throws Exception {
    
     System.out.println("\n\n\n!!!STARTING DELETE!!!");
-    Iterable<Issue> issues = iRepo.findAll();
-    issues.forEach(e -> iRepo.deleteIssue(e.getIssueId()));
+    Iterator<Issue> issues = iRepo.findAll().iterator();
+    Issue newIssue;
+    while(issues.hasNext()) {
+      newIssue = issues.next();
+      iRepo.unassignUserFromIssue(newIssue.getIssueId());
+      iRepo.deleteIssue(newIssue.getIssueId());
+    }
     uRepo.deleteAll();
     cRepo.deleteAll();
     rRepo.deleteAll();
@@ -54,17 +60,15 @@ public class DatebaseLoader implements CommandLineRunner {
     
     Issue issue = new Issue("UI won't load", "Page won't load", "Extreme", company, "UI", "Not Fixed", user1, LocalDateTime.now());
     Issue issue2 = new Issue("API Crashes when deleting Issue object", "When using the default repositorie's delete methods a PropertyValueException is thrown.", "Extreme", company, "API", "Not Fixed", user1, LocalDateTime.now());
-    issue.assignUser(user1);
-    issue.assignUser(user2);
-    issue2.assignUser(user1);
+    uRepo.save(user1);
+    uRepo.save(user2);
     iRepo.save(issue);
     iRepo.save(issue2);
+    iRepo.assignUserToIssue(issue.getIssueId(), user1.getUserId());
+    iRepo.assignUserToIssue(issue2.getIssueId(), user1.getUserId());
+    iRepo.assignUserToIssue(issue.getIssueId(), user2.getUserId());
     //iRepo.assignUserToIssue(issue.getIssue_id(), user1.getUserId());
     //iRepo.assignUserToIssue(issue.getIssue_id(), user2.getUserId());
-
-    System.out.println("\n\n\n\nUser1 Issues:" + user1.getIssues());
-    System.out.println("\nUser2 Issues:" + user2.getIssues());
-    
 
     System.out.println("\n\n\n\nIT WORKED!!!!!!");
   }

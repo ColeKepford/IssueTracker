@@ -25,46 +25,32 @@ public class CompanyController {
     }
 
     @GetMapping("/allCompanies")
-    public List<CompanyDto> getAllCompanies() {
-      List<Company> companies = companyService.getAllCompanies();
-      return companies.stream()
-      .map(this::convertToDto)
-      .collect(Collectors.toList());
+    public List<Company> getAllCompanies() {
+      return companyService.getAllCompanies();
     }
 
     @GetMapping("/id/{id}")
-    public CompanyDto getCompany(@PathVariable("id")long id) {
-      return convertToDto(companyService.getCompanyById(id));
+    public Company getCompany(@PathVariable("id")long id) {
+      return companyService.getCompanyById(id);
     }
 
     @GetMapping("/companyName/{name}")
-    public List<CompanyDto> getCompanyByName(@PathVariable String name) {
-      List<Company> companies = companyService.getByCompanyName(name);
-      return companies.stream()
-      .map(this::convertToDto)
-      .collect(Collectors.toList());
+    public List<Company> getCompanyByName(@PathVariable String name) {
+      return companyService.getByCompanyName(name);
     }
 
     @PostMapping(path="/registerCompany", consumes = "application/json", produces = "application/json")
-    public void addNewCompany(@RequestBody CompanyDto company) {
-      companyService.addNewCompany(convertToEntity(company));
+    public void addNewCompany(@RequestBody Company company) {
+      companyService.addNewCompany(company);
     }
 
     @PutMapping(path="/deleteCompany")
-    public void deleteCompany(@RequestBody CompanyDto company) {
-      companyService.deleteCompany(convertToEntity(company));
+    public void deleteCompany(@RequestBody Company company) {
+      companyService.deleteCompany(company);
     }
 
     @PutMapping(path="/updateCompany")
-    public void updateCompany(@RequestBody CompanyDto company) {
-      companyService.updateCompany(convertToEntity(company));
-    }
-
-    private CompanyDto convertToDto(Company company) {
-      return dtoConverter.companyToDto(company); 
-    }
-
-    private Company convertToEntity(CompanyDto companyDto) {
-      return dtoConverter.companyDtoToEntity(companyDto);
+    public void updateCompany(@RequestBody Company company) {
+      companyService.updateCompany(company);
     }
 }

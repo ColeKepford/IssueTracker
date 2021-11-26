@@ -24,7 +24,7 @@ public class CompanyService {
   }
 
   public List<Company> getAllCompanies() {
-    logs.userRetrievedSuccessfully("Retrieved all companies");
+    logs.info("Retrieved all companies");
 
     Iterable<Company> iterable = companyRepository.findAll();
     ArrayList<Company> companies = new ArrayList<>();
@@ -35,11 +35,11 @@ public class CompanyService {
   public Company getCompanyById(long id) {
     Optional<Company> optional = companyRepository.findById(id);
     if(!optional.isPresent()) {
-      logs.userDoesntExist("Company with id: "+id+" doesnt exsist");
+      logs.info("Company with id: "+id+" doesnt exsist.");
       return null;
     }
     else{
-      logs.userRetrievedSuccessfully("Company with id: "+id+" was retrieved");
+      logs.info("Company retrieved.");
       return optional.get();
     }
   }
@@ -47,11 +47,11 @@ public class CompanyService {
   public List<Company> getByCompanyName(String name) {
     Optional<List<Company>> companyOptional = companyRepository.findByCompanyName(name);
     if(companyOptional.isPresent()) {
-      logs.companyRetrievedSuccesfully("Companies containing: " + name + " retrieved succesfully"); 
+      logs.info("Companies with given name retrieved."); 
       return companyOptional.get();
     }
     else {
-      logs.companyDoesntExist("Companies with name: " + name + "don't exist");
+      logs.info("Companies with given name don't exist");
         return new ArrayList<>();
     }
   }
@@ -59,11 +59,11 @@ public class CompanyService {
   public void addNewCompany(Company company) {
     Optional<Company> companyOptional = companyRepository.findById(company.getCompanyId());
     if(companyOptional.isPresent()) {
-      logs.companyDoesExist("Company with id: " + company.getCompanyId() + " already exists");
+      logs.info("Company already exists.");
     }
     else {
       companyRepository.save(company);
-      logs.companyAdded("Company: " + company.getName() + " was succesfully added");
+      logs.info("Company Succesfully Added");
     }
   }
 
@@ -73,7 +73,7 @@ public class CompanyService {
       companyRepository.updateCompany(company.getName(), company.getCompanyId());
     }
     else {
-      logs.companyDoesntExist("Unable to update Company");
+      logs.error("Unable to update Company");
     }
   }
 
@@ -83,7 +83,7 @@ public class CompanyService {
       companyRepository.delete(company);
     }
     else {
-      logs.companyDoesntExist("Unable to delete Company");
+      logs.error("Unable to delete Company");
     }
   }
 }

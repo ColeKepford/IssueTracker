@@ -50,6 +50,11 @@ public interface IssueRepository extends PagingAndSortingRepository<Issue, Long>
 
   @Transactional
   @Modifying
+  @Query(value="DELETE FROM issue_assigned_users WHERE issue=?1", nativeQuery=true)
+  void unassignUserFromIssue(long issueId);
+
+  @Transactional
+  @Modifying
   @Query("DELETE FROM Issue WHERE issue_id=?1")
   void deleteIssue(long id);
 

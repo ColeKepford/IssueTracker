@@ -139,13 +139,14 @@ public class IssueService {
     }
   }
 
-  public void assignUserToIssue(long issueId, long userId) {
-    issueRepository.assignUserToIssue(issueId, userId);
+  public void assignUserToIssue(Issue issue, User user) {
+    issueRepository.assignUserToIssue(issue.getIssueId(), user.getUserId());
   }
 
   public void deleteIssue(Issue issue) {
     Optional<Issue> issueOptional = issueRepository.findById(issue.getIssueId());
     if(issueOptional.isPresent()) {
+      issueRepository.unassignUserFromIssue(issue.getIssueId());
       issueRepository.delete(issue);
     }
     else {

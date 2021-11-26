@@ -1,13 +1,8 @@
 package com.bugtracker.alpha.entities;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Objects;
-import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -15,8 +10,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -54,13 +47,13 @@ public class Issue {
   @Column(name = "date_resolved")
   private LocalDateTime dateResolved;
 
-  @ManyToMany(fetch = FetchType.EAGER, 
-    cascade = CascadeType.ALL
+  /*@ManyToMany(
+    fetch = FetchType.LAZY, 
+    cascade = {CascadeType.MERGE, 
+      CascadeType.PERSIST}, mappedBy = "issues"
   )
-  @JoinTable(name = "issue_assigned_users",
-      joinColumns = @JoinColumn(name = "issue", nullable = false, updatable = false),
-      inverseJoinColumns = @JoinColumn(name = "user", nullable = false, updatable = false))
-  private Set<User> assignedUsers = new HashSet<>();
+  @JsonIgnore
+  private Set<User> assignedUsers = new HashSet<>();*/
 
 
   public Issue() {
@@ -75,24 +68,8 @@ public class Issue {
     this.state = state;
     this.creator = creator;
     this.dateCreated = dateCreated;
-    assignUser(creator);
     /*this.assignedUsers = Stream.of(assignedUsers).collect(Collectors.toSet());
     this.assignedUsers.forEach(x -> x.getIssues().add(this));*/
-  }
-
-  public Issue(long issueId, String title, String description, String severity, Company company, String type, String state, User creator, LocalDateTime dateCreated, LocalDateTime dateResolved, Set<User> assignedUsers)  {
-    this.issueId = issueId;
-    this.title = title;
-    this.description = description;
-    this.severity = severity;
-    this.company = company;
-    this.type = type;
-    this.state = state;
-    this.creator = creator;
-    this.dateCreated = dateCreated;
-    this.dateResolved = dateResolved;
-    this.assignedUsers = assignedUsers;
-    assignUser(creator);
   }
 
   public long getIssueId() {
@@ -150,7 +127,6 @@ public class Issue {
 
   public void setCreator(User creator) {
     this.creator = creator;
-    assignUser(creator);
   }
 
   public String getState() {
@@ -160,11 +136,6 @@ public class Issue {
   public void setState(String state) {
     this.state = state;
   }
-
-  public Set<User> getUsers() {
-    return this.assignedUsers;
-  }
-
 
   public LocalDateTime getDateCreated() {
     return this.dateCreated;
@@ -182,7 +153,7 @@ public class Issue {
     this.dateResolved = dateResolved;
   }
 
-  public Set<User> getAssignedUsers() {
+  /*public Set<User> getAssignedUsers() {
     return this.assignedUsers;
   }
 
@@ -198,7 +169,7 @@ public class Issue {
       assignedUsers.remove(user);
       user.removeIssue(this);
     }
-  }
+  }*/
 
 
   @Override
@@ -226,7 +197,7 @@ public class Issue {
             return false;
         }
         Issue issue = (Issue) o;
-        return issueId == issue.issueId && Objects.equals(title, issue.title) && Objects.equals(description, issue.description) && Objects.equals(severity, issue.severity) && Objects.equals(company, issue.company) && Objects.equals(type, issue.type) && Objects.equals(state, issue.state) && Objects.equals(creator, issue.creator) && Objects.equals(dateCreated, issue.dateCreated) && Objects.equals(dateResolved, issue.dateResolved) && Objects.equals(assignedUsers, issue.assignedUsers);
+        return issueId == issue.issueId && Objects.equals(title, issue.title) && Objects.equals(description, issue.description) && Objects.equals(severity, issue.severity) && Objects.equals(company, issue.company) && Objects.equals(type, issue.type) && Objects.equals(state, issue.state) && Objects.equals(creator, issue.creator) && Objects.equals(dateCreated, issue.dateCreated) && Objects.equals(dateResolved, issue.dateResolved);
   }
 
   @Override
